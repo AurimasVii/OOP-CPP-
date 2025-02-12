@@ -92,8 +92,8 @@ class Uzduotis {
             return comments.size();
         }
 
-        string getId() {
-            return to_string(id);
+        int getId() {
+            return id;
         }
         time_t getTimeLeft() {
             return dateDue - dateCreated;
@@ -144,18 +144,30 @@ int main() {
     assert(task->getDone() != done);
 
     //numeracija ir count
-    assert(task->getId() == "1");
+    assert(task->getId() == 1);
     assert(task->getCount() == 1);
 
-    for(int i = 1; i <= 10; ++i) {
-        task = new Uzduotis("Task" + to_string(i), "In Progress");
-    }
-    assert(task->getId() == "11");
-    assert(task->getCount() == 11);
+    //pakeist kad vektoriai butu
+    //for(int i = 1; i <= 10; ++i) {
+    //    task = new Uzduotis("Task" + to_string(i), "In Progress");
+    //}
+    Uzduotis* tasks = new Uzduotis[10] {
+        Uzduotis("Task2", "In Progress"),
+        Uzduotis("Task3", "In Progress"),
+        Uzduotis("Task4", "In Progress"),
+        Uzduotis("Task5", "In Progress"),
+        Uzduotis("Task6", "In Progress"),
+        Uzduotis("Task7", "In Progress"),
+        Uzduotis("Task8", "In Progress"),
+        Uzduotis("Task9", "In Progress"),
+        Uzduotis("Task10", "In Progress"),
+        Uzduotis("Task11", "In Progress")
+    };
+    assert(tasks[9].getId() == 11);
     delete task;
     assert(task->getCount() == 10);
     task = new Uzduotis("Task11", "In Progress");
-    assert(task->getId() == "12");
+    assert(task->getId() == 12);
 
     string comment = "Comment1";
     task->addComment(comment);
@@ -163,6 +175,8 @@ int main() {
     assert(task->getCommentQuont() == 1);
     task->deleteComment(0);
     assert(task->getCommentQuont() == 0);
+
+    assert(tasks[9].getDiagnostics() == "ID: 11\nName: Task11\nDate Created: " + to_string(tasks[9].getDateCreated()) + "\nDate Due: " + to_string(tasks[9].getDateDue()) + "\nTime left: " + to_string(tasks[9].getTimeLeft()) + " seconds\nStatus: In Progress\nDone: 0\n\n");
 
     cout << "All assert checks passed successfully!" << endl;
     return 0;
