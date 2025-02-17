@@ -19,7 +19,7 @@ class Uzduotis {
         bool done;
         int commentQuant = 0;
         vector<string> comments;
-        //1 konstruktorius
+
         Uzduotis(string name, time_t dateCreated, time_t dateDue, string status, bool done) {
             this->id = nextId++;
             count++;
@@ -40,45 +40,23 @@ class Uzduotis {
             this->done = false;
         }
         ~Uzduotis() {
-            for(auto &comment : comments) {
-                comment.clear();
-            }
-            vector<string>().swap(comments);
+            comments.clear();
             count--;
-            
         }
 
-        string getName() {
-            return name;
-        }
-
-        int getDateCreated() {
-            return dateCreated;
-        }
+        
         void setDateDue(time_t due) {
             if (due < dateCreated) {
                 throw invalid_argument("dateDue cannot be earlier than dateCreated");
             }
             dateDue = due;
         }
-        int getDateDue() {
-            return dateDue;
-        }
-       
         void setStatus(string status) {
             this->status = status;
         }
-        string getStatus() {
-            return status;
-        }
-
         void setDone(bool done) {
             this->done = done;
         }
-        bool getDone() {
-            return done;   
-        }
-
         void addComment(string comment) {
             comments.push_back(comment);
         }
@@ -88,15 +66,31 @@ class Uzduotis {
             }
             comments.erase(comments.begin() + index);
         }
+
+
+        string getName() {
+            return name;
+        }
+        int getDateCreated() {
+            return dateCreated;
+        }
+        int getDateDue() {
+            return dateDue;
+        }
+        string getStatus() {
+            return status;
+        }
+        bool getDone() {
+            return done;   
+        }
         int getCommentQuont() {
             return comments.size();
         }
-
         int getId() {
             return id;
         }
-        time_t getTimeLeft() {
-            return dateDue - dateCreated;
+        static int getCount() {
+            return count; 
         }
 
         string getDiagnostics() {
@@ -105,7 +99,6 @@ class Uzduotis {
             ss << "Name: " << name << endl;
             ss << "Date Created: " << dateCreated << endl;
             ss << "Date Due: " << dateDue << endl;
-            ss << "Time left: " << getTimeLeft() << " seconds" << endl;
             ss << "Status: " << status << endl;
             ss << "Done: " << done << endl;
             for (const auto& comment : comments) {
@@ -114,7 +107,7 @@ class Uzduotis {
             ss << '\n';
             return ss.str();
         }
-        static int getCount() { return count; }
+        
 };
 
 int Uzduotis::count = 0;
@@ -128,14 +121,13 @@ int main() {
     string name = "Task1";
 
     task = new Uzduotis(name, createdDate, dueDate, status, done);
-    //geteriai
+
     assert(task->getName() == name);
     assert(task->getDateCreated() == createdDate);
     assert(task->getDateDue() == dueDate);
-    assert(task->getTimeLeft() == dueDate - createdDate);
     assert(task->getStatus() == status);
     assert(task->getDone() == done);
-    //seteriai
+
     task->setDateDue(time(0) + 1000);
     task->setStatus("Done");
     task->setDone(true);
@@ -143,27 +135,15 @@ int main() {
     assert(task->getStatus() != status);
     assert(task->getDone() != done);
 
-    //numeracija ir count
     assert(task->getId() == 1);
     assert(task->getCount() == 1);
 
-    //pakeist kad vektoriai butu
-    //for(int i = 1; i <= 10; ++i) {
-    //    task = new Uzduotis("Task" + to_string(i), "In Progress");
-    //}
-    Uzduotis* tasks = new Uzduotis[10] {
-        Uzduotis("Task2", "In Progress"),
-        Uzduotis("Task3", "In Progress"),
-        Uzduotis("Task4", "In Progress"),
-        Uzduotis("Task5", "In Progress"),
-        Uzduotis("Task6", "In Progress"),
-        Uzduotis("Task7", "In Progress"),
-        Uzduotis("Task8", "In Progress"),
-        Uzduotis("Task9", "In Progress"),
-        Uzduotis("Task10", "In Progress"),
-        Uzduotis("Task11", "In Progress")
-    };
-    assert(tasks[9].getId() == 11);
+    vector<Uzduotis*> tasks;
+    for(int i = 0; i < 10; ++i) {
+        tasks.push_back(new Uzduotis("Task" + to_string(i + 1), "In Progress"));
+    }
+  
+    assert(tasks[9]->getId() == 11);
     delete task;
     assert(task->getCount() == 10);
     task = new Uzduotis("Task11", "In Progress");
@@ -176,7 +156,7 @@ int main() {
     task->deleteComment(0);
     assert(task->getCommentQuont() == 0);
 
-    assert(tasks[9].getDiagnostics() == "ID: 11\nName: Task11\nDate Created: " + to_string(tasks[9].getDateCreated()) + "\nDate Due: " + to_string(tasks[9].getDateDue()) + "\nTime left: " + to_string(tasks[9].getTimeLeft()) + " seconds\nStatus: In Progress\nDone: 0\n\n");
+    assert(tasks[9]->getDiagnostics() == "ID: 11\nName: Task10\nDate Created: " + to_string(tasks[9]->getDateCreated()) + "\nDate Due: " + to_string(tasks[9]->getDateDue()) + "\nStatus: In Progress\nDone: 0\n\n");
 
     cout << "All assert checks passed successfully!" << endl;
     return 0;
