@@ -6,7 +6,7 @@
 #include <assert.h>
 
 using namespace std;
-class Uzduotis {
+class Task {
     private:
         static int count;
         static int nextId;
@@ -20,7 +20,7 @@ class Uzduotis {
         int commentQuant = 0;
         vector<string> comments;
 
-        Uzduotis(string name, time_t dateCreated, time_t dateDue, string status, bool done) {
+        Task(string name, time_t dateCreated, time_t dateDue, string status, bool done) {
             this->id = nextId++;
             count++;
             this->name = name;
@@ -29,7 +29,7 @@ class Uzduotis {
             this->status = status;
             this->done = done;
         }
-        Uzduotis(string name, string status) {
+        Task(string name, string status) {
             this->id = nextId++;
             count++;
             this->name = name;
@@ -39,7 +39,7 @@ class Uzduotis {
             this->dateDue = time(0);
             this->done = false;
         }
-        ~Uzduotis() {
+        ~Task() {
             comments.clear();
             count--;
         }
@@ -110,17 +110,17 @@ class Uzduotis {
         
 };
 
-int Uzduotis::count = 0;
-int Uzduotis::nextId = 1;
+int Task::count = 0;
+int Task::nextId = 1;
 int main() {
-    Uzduotis* task;
-    time_t createdDate = time(0); // Capture current time
+    Task* task;
+    time_t createdDate = time(0); 
     time_t dueDate = createdDate + 100;
     string status = "In Progress";
     bool done = false;
     string name = "Task1";
 
-    task = new Uzduotis(name, createdDate, dueDate, status, done);
+    task = new Task(name, createdDate, dueDate, status, done);
 
     assert(task->getName() == name);
     assert(task->getDateCreated() == createdDate);
@@ -138,15 +138,15 @@ int main() {
     assert(task->getId() == 1);
     assert(task->getCount() == 1);
 
-    vector<Uzduotis*> tasks;
+    vector<Task*> tasks;
     for(int i = 0; i < 10; ++i) {
-        tasks.push_back(new Uzduotis("Task" + to_string(i + 1), "In Progress"));
+        tasks.push_back(new Task("Task" + to_string(i + 1), "In Progress"));
     }
   
     assert(tasks[9]->getId() == 11);
     delete task;
     assert(task->getCount() == 10);
-    task = new Uzduotis("Task11", "In Progress");
+    task = new Task("Task11", "In Progress");
     assert(task->getId() == 12);
 
     string comment = "Comment1";
