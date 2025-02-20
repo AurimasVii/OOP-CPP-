@@ -158,6 +158,6 @@ int main() {
 
     assert(tasks[9]->getDiagnostics() == "ID: 11\nName: Task10\nDate Created: " + to_string(tasks[9]->getDateCreated()) + "\nDate Due: " + to_string(tasks[9]->getDateDue()) + "\nStatus: In Progress\nDone: 0\n\n");
 
-    cout << "All assert checks passed successfully!" << endl;
+  
     return 0;
 };
